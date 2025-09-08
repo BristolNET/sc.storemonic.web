@@ -1,42 +1,40 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import CustomerSite from './components/customersite.tsx'
-import { getStores } from './services/service'
-import type { Store } from './objects/store.ts'
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import StoreLayout from "./components/StoreLayout";
+import { getStores } from "./services/service";
+import ProductPage from "./components/ProductPage";
 
 const App = () => {
-
-
-  const [stores, setStores] = useState<Store[]>([]);
-
-  useEffect(() => {
-    getActiveStores();
-  }, []);
-
-  // Loads active stores
-  const getActiveStores = () => {
-
-    // const fetchStores = async () => {
-    //   const result = await getStores();
-    //   setStores(result);
-    // };
-    // fetchStores();
-    const result = getStores();
-    setStores(result);
-  }
-
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-10 underline">Simonik Custom Apparel</h1>
-      <div className="flex flex-row content-center justify-center">
-        { stores.map(store => (
-          <CustomerSite key={store.id} companyName={store.name} logo={store.logo} url={store.url} />
-        ))}
-      </div>
-    </div>
-  )
+    <Router>
+      <Routes>
+        {/* Landing page */}
+        <Route
+          path="/"
+          element={
+            <div className="p-6">
+              <h1 className="text-2xl font-bold mb-4">Select a Store</h1>
+              <ul className="space-y-2">
+                { getStores().map((store) => (
+                  <li key={store.id}>
+                    <Link
+                      to={`/store/${store.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {store.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          }
+        />
+
+        {/* Store routes */}
+        <Route path="/store/:storeId/*" element={<StoreLayout />} />
+        <Route path="/productpage/:productId" element={<ProductPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

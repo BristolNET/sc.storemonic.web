@@ -1,4 +1,5 @@
 import type { Store } from '../objects/store';
+import type { Product } from '../objects/product';
 
 export async function fetchData(url: string): Promise<any> {
   const response = await fetch(url);
@@ -41,7 +42,27 @@ export function putData(url: string, data: any): Promise<any> {
 export function getStores(): Store[] {
 
   return [
-    { id: 1, name: 'LMVSC Travel Basketball', location: '123 Main St', url: 'https://simonikcustom.com/LMVSC', logo: 'https://www.soccerwire.com/wp-content/uploads/2019/06/LMVSC-350x200.png' },
-    { id: 2, name: 'Edison Theatre Company', location: '456 Mall Rd', url: 'https://simonikcustom.com/ETC', logo: 'https://static.wixstatic.com/media/5741fd_1c1968f2071d422f9504c78037d7c9bb~mv2_d_4134_5823_s_4_2.png' }
+    { id: 1, name: 'LMVSC Travel Basketball', logo: 'https://www.soccerwire.com/wp-content/uploads/2019/06/LMVSC-350x200.png' },
+    { id: 2, name: 'Edison Theatre Company', logo: 'https://static.wixstatic.com/media/5741fd_1c1968f2071d422f9504c78037d7c9bb~mv2_d_4134_5823_s_4_2.png' }
   ];
+}
+
+export function getProductsByStore(storeId: number): Product[] {
+  const products: Product[] = [
+    { id: 1, title: 'Widget A', description: '', price: 19.99, storeId: 1 },
+    { id: 2, title: 'Widget B', description: '', price: 29.99, storeId: 1 },
+    { id: 3, title: 'Gadget C', description: '', price: 39.99, storeId: 2 },
+    { id: 4, title: 'Gadget D', description: '', price: 49.99, storeId: 2 }
+  ];
+  return products.filter(p => p.storeId === storeId);
+}
+
+export function getProduct(productId: number): Product | undefined {
+  const products: Product[] = [
+    { id: 1, title: 'Widget A', description: '', price: 19.99, storeId: 1 },
+    { id: 2, title: 'Widget B', description: '', price: 29.99, storeId: 1 },
+    { id: 3, title: 'Gadget C', description: '', price: 39.99, storeId: 2 },
+    { id: 4, title: 'Gadget D', description: '', price: 49.99, storeId: 2 }
+  ];
+  return products.filter(p => p.id === productId)[0];
 }
