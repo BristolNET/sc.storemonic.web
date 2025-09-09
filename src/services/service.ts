@@ -1,6 +1,13 @@
 import type { Store } from '../objects/store';
 import type { Product } from '../objects/product';
 
+const _products: Product[] = [
+  { id: 1, title: 'Widget A', description: '', price: 19.99, storeId: 1 },
+  { id: 2, title: 'Widget B', description: '', price: 29.99, storeId: 1 },
+  { id: 3, title: 'Gadget C', description: '', price: 39.99, storeId: 2 },
+  { id: 4, title: 'Gadget D', description: '', price: 49.99, storeId: 2 }
+];
+
 export async function fetchData(url: string): Promise<any> {
   const response = await fetch(url);
   if (!response.ok) {
@@ -48,21 +55,9 @@ export function getStores(): Store[] {
 }
 
 export function getProductsByStore(storeId: number): Product[] {
-  const products: Product[] = [
-    { id: 1, title: 'Widget A', description: '', price: 19.99, storeId: 1 },
-    { id: 2, title: 'Widget B', description: '', price: 29.99, storeId: 1 },
-    { id: 3, title: 'Gadget C', description: '', price: 39.99, storeId: 2 },
-    { id: 4, title: 'Gadget D', description: '', price: 49.99, storeId: 2 }
-  ];
-  return products.filter(p => p.storeId === storeId);
+  return _products.filter(p => p.storeId === storeId);
 }
 
 export function getProduct(productId: number): Product | undefined {
-  const products: Product[] = [
-    { id: 1, title: 'Widget A', description: '', price: 19.99, storeId: 1 },
-    { id: 2, title: 'Widget B', description: '', price: 29.99, storeId: 1 },
-    { id: 3, title: 'Gadget C', description: '', price: 39.99, storeId: 2 },
-    { id: 4, title: 'Gadget D', description: '', price: 49.99, storeId: 2 }
-  ];
-  return products.filter(p => p.id === productId)[0];
+  return _products.filter(p => p.id === productId)[0];
 }
