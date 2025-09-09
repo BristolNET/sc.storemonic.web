@@ -1,42 +1,83 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import CustomerSite from './components/customersite.tsx'
-import { getStores } from './services/service'
+import { getStoreById, getProductsByStore, getPackagesByStore } from './services/service'
 import type { Store } from './objects/store.ts'
+import type { Product } from './objects/product.ts'
+import SiteHeader from './components/siteheader.tsx'
+import PackagePage from './components/packagepage.tsx'
+import ProductPage from './components/ProductPage.tsx'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import type { Package } from './objects/package.ts'
+import PackageListItem from './components/packagelistitem.tsx'
+import ProductListItem from './components/packagelistitem.tsx'
 
 const App = () => {
 
-
-  const [stores, setStores] = useState<Store[]>([]);
+  const [store, setStore] = useState<Store>();
+  const [packages, setPackages] = useState<Package[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    getActiveStores();
+
+    // Load store data
+    const s: Store = getStoreById(1);
+    setStore(s);
+
+    // Load packages for the store
+    const pkgs: Package[] = getPackagesByStore(s.id);
+    setPackages(pkgs);
+
+    // Load products for the store
+    const prods: Product[] = getProductsByStore(s.id);
+    setProducts(prods);
   }, []);
 
-  // Loads active stores
-  const getActiveStores = () => {
-
-    // const fetchStores = async () => {
-    //   const result = await getStores();
-    //   setStores(result);
-    // };
-    // fetchStores();
-    const result = getStores();
-    setStores(result);
-  }
-
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-10 underline">Simonik Custom Apparel</h1>
-      <div className="flex flex-row content-center justify-center">
-        { stores.map(store => (
-          <CustomerSite key={store.id} companyName={store.name} logo={store.logo} url={store.url} />
-        ))}
-      </div>
-    </div>
-  )
+    <Router>
+      <Routes>
+        {/* Landing page */}
+        <Route
+          path="/"
+          element={
+            <div>
+              {store && (
+                <SiteHeader key={store.id} companyName={store.name} logo={store.logo} url={store.url} />
+              )}
+              <br />
+              <div className="container mx-auto p-4">
+                <h2 className="text-2xl font-bold mb-4">Packages</h2>
+                {packages.length > 0 ? (
+                  <div>
+                    {packages.map((p) => (
+                      <PackageListItem id={p.id} title={p.title} description={p.description} imageUrl={p.imageUrl} price={p.price} /> 
+                    ))}
+                  </div>
+                 ) : (
+                  <p>No packages available.</p>
+                )}
+              </div>
+              <div className="container mx-auto p-4">
+                <h2 className="text-2xl font-bold mb-4">Products</h2>
+                {products.length > 0 ? (
+                  <div>
+                  {products.map((p) => (
+                    <ProductListItem id={p.id} title={p.title} description={p.description} imageUrl={p.imageUrl} price={p.price} /> 
+                    ))}
+                  </div>
+                 ) : (
+                  <p>No products available.</p>
+                )}
+              </div>
+            </div>
+          }
+        />
+
+        {/* Store routes */}
+        <Route path="/package/:packageId" element={<PackagePage />} />
+        <Route path="/product/:productId" element={<ProductPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App

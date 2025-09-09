@@ -1,4 +1,3 @@
-import react from 'react'
 
 const CustomerSite = ({companyName, url, logo}: any) => {
   return (
